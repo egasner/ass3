@@ -33,9 +33,9 @@ function App() {
         getAllProducts();
     }, []);
 
-    useEffect(() => {
-        getAllProducts();
-    }, [checked4]);
+    // useEffect(() => {
+    //     getAllProducts();
+    // }, [checked4]);
 
     function getOneByOneProductNext() {
         if (product.length > 0) {
@@ -177,8 +177,7 @@ function App() {
                 {viewer2 && <div>Product: {showOneItem}</div>}
                 <hr></hr>
             </div>
-            <div><h3>Show one Product by Id:</h3>
-            </div>
+            
             <div>
                 <h3>Add a new product :</h3>
                 <form action="">
