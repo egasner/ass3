@@ -61,19 +61,29 @@ app.post("/update", async (req, res) => {
     console.log(req.body);
     const p_id = req.body._id;
     const pprice = req.body.price;
+
+    try{
+        await Product.updateOne({ _id: p_id}, {
+            price: pprice
+        });
+        const messageResponse = { message: `product ${p_id} updated correctly`};
+        res.send(JSON.stringify(messageResponse));
+    } catch (err){
+        console.log("error while updating a product:" + p_id + " " + err);
+    }
     
-    await Product.findById(p_id, function (err, prod) {
-        if (prod === null) {
-            console.log("product not found");
-        }
-        else {
-            // Increase student's GPA and save
-            prod.price = pprice;
-            prod.save(function (err, prod) {
-                console.log("Updated Succesfully");
-            });
-        }
-    });
+    //await Product.findById(p_id, function (err, prod) {
+    //    if (prod === null) {
+    //        console.log("product not found");
+    //    }
+    //    else {
+    //        // Increase student's GPA and save
+    //        prod.price = pprice;
+    //        prod.save(function (err, prod) {
+    //            console.log("Updated Succesfully");
+    //        });
+    //    }
+    //});
 });
 
 app.delete("/delete", async (req, res) => {
