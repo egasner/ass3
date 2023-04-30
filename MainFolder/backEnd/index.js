@@ -57,6 +57,25 @@ app.post("/insert", async (req, res) => {
     }
 });
 
+app.post("/update", async (req, res) => {
+    console.log(req.body);
+    const p_id = req.body._id;
+    const pprice = req.body.price;
+    
+    await Product.findById(p_id, function (err, prod) {
+        if (prod === null) {
+            console.log("product not found");
+        }
+        else {
+            // Increase student's GPA and save
+            prod.price = pprice;
+            prod.save(function (err, prod) {
+                console.log("Updated Succesfully");
+            });
+        }
+    });
+});
+
 app.delete("/delete", async (req, res) => {
     console.log("Delete :", req.body);
     try {

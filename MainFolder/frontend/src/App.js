@@ -6,6 +6,7 @@ function App() {
     const [viewer1, setViewer1] = useState(false);
     const [viewer4, setViewer4] = useState(false);
     const [checked4, setChecked4] = useState(false);
+    const [checked6, setChecked6] = useState(false);
     const [index, setIndex] = useState(0);
     const [viewer2, setViewer2] = useState(false);
 
@@ -19,13 +20,32 @@ function App() {
         rating: { rate: 0.0, count: 0 },
     });
 
+    const [updateProduct, setUpdateProduct] = useState({
+        _id: 0,
+        price: 0.0,
+    });
+
     const showOneItem = oneProduct.map((el) => (
         <div key={el._id}>
-            <img src={el.image} width={30} /> <br />
+            <br></br>
+            <img src={el.image} width={500} /> <br />
             Title: {el.title} <br />
             Category: {el.category} <br />
             Price: {el.price} <br />
             Rate :{el.rating.rate} and Count:{el.rating.count} <br />
+            <br></br>
+        </div>
+    ));
+
+    const showAllItems = product.map((el) => (
+        <div key={el._id}>
+            <br></br>
+            <img src={el.image} width={200} /> <br />
+            Title: {el.title} <br />
+            Category: {el.category} <br />
+            Price: {el.price} <br />
+            Rate :{el.rating.rate} and Count:{el.rating.count} <br />
+            <br></br>
         </div>
     ));
 
@@ -76,6 +96,45 @@ function App() {
         getOneByOneProductNext();
     }
 
+    function updateOneProduct(updateid, inprice) {
+        console.log("Product to update :", updateid);
+        fetch("http://localhost:4000/update/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ _id: updateid, price: inprice}),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("update a product completed : ", updateid);
+                console.log(data);
+                if (data) {
+                    //const keys = Object.keys(data);
+                    const value = Object.values(data);
+                    alert(value);
+                }
+            });
+    }
+
+    function handleOnSubmit(e) {
+        e.preventDefault();
+        console.log(e.target.value);
+        fetch("http://localhost:4000/insert", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(addNewProduct),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Post a new product completed");
+                console.log(data);
+                if (data) {
+                    //const keys = Object.keys(data);
+                    const value = Object.values(data);
+                    alert(value);
+                }
+            });
+    }
+
     function getAllProducts() {
         fetch("http://localhost:4000/")
             .then((response) => response.json())
@@ -113,25 +172,7 @@ function App() {
         }
     }
 
-    function handleOnSubmit(e) {
-        e.preventDefault();
-        console.log(e.target.value);
-        fetch("http://localhost:4000/insert", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(addNewProduct),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Post a new product completed");
-                console.log(data);
-                if (data) {
-                    //const keys = Object.keys(data);
-                    const value = Object.values(data);
-                    alert(value);
-                }
-            });
-    }
+
 
     function getOneProduct(id) {
         console.log(id);
@@ -145,26 +186,19 @@ function App() {
                     dataArr.push(data);
                     setOneProduct(dataArr);
                 });
-                setViewer2(!viewer2);
+            setViewer2(!viewer2);
         } else {
             console.log("Wrong number of Product id.");
             setViewer2(false);
         }
-        
+
     }
 
-    const showAllItems = product.map((el) => (
-        <div key={el._id}>
-            <img src={el.image} width={30} /> <br />
-            Title: {el.title} <br />
-            Category: {el.category} <br />
-            Price: {el.price} <br />
-            Rate :{el.rating.rate} and Count:{el.rating.count} <br />
-        </div>
-    ));
+
 
     return (
         <div>
+            <center>
             <div>
                 <h1>Catalog of Products</h1>
                 <button onClick={() => getAllProducts()}>Show All products</button>
@@ -177,7 +211,7 @@ function App() {
                 {viewer2 && <div>Product: {showOneItem}</div>}
                 <hr></hr>
             </div>
-            
+
             <div>
                 <h3>Add a new product :</h3>
                 <form action="">
@@ -193,6 +227,23 @@ function App() {
                         submit
                     </button>
                 </form>
+            </div>
+            <div>
+                <h3>update one product:</h3>
+                <input type="checkbox" id="acceptdelete" name="acceptdelete" checked={checked6}
+                    onChange={(e) => setChecked6(!checked6)} />
+                
+                <button onClick={() => getOneByOneProductPrev()}>Prev</button>
+                <button onClick={() => getOneByOneProductNext()}>Next</button>
+                <input type="number" placeholder="price?" name="price" value={addNewProduct.price} onChange={handleChange} />
+                <button >Update</button>
+                {checked6 && (
+                    <div key={product[index]._id}>
+                        <img src={product[index].image} width={30} /> <br />
+                        Id:{product[index]._id} <br />
+                        Price: {product[index].price} <br />
+                    </div>
+                )}
             </div>
             <div>
                 <h3>Delete one product:</h3>
@@ -213,6 +264,7 @@ function App() {
                     </div>
                 )}
             </div>
+            </center>
         </div>
     ); // return end
 }; // App end
