@@ -32,20 +32,17 @@ app.post("/insert", async (req, res) => {
     console.log(req.body);
     const p_id = req.body._id;
     const ptitle = req.body.title;
-    const pprice = req.body.price;
-    const pdescription = req.body.description;
-    const pcategory = req.body.category;
+    const ppoints = req.body.points;
+    const pquestion = req.body.question;
+    const panswer = req.body.answer;
     const pimage = req.body.image;
-    const prate = req.body.rating.rate;
-    const pcount = req.body.rating.count;
     const formData = new Product({
         _id: p_id,
         title: ptitle,
-        price: pprice,
-        description: pdescription,
-        category: pcategory,
+        points: ppoints,
+        question: pquestion,
+        answer: panswer,
         image: pimage,
-        rating: { rate: prate, count: pcount },
     });
     try {
         // await formData.save();
@@ -59,12 +56,16 @@ app.post("/insert", async (req, res) => {
 
 app.post("/update", async (req, res) => {
     console.log(req.body);
+    const panswer = req.body.answer;
+    const pquestion = req.body.question
     const p_id = req.body._id;
-    const pprice = req.body.price;
+    const ppoints = req.body.points;
 
     try{
         await Product.updateOne({ _id: p_id}, {
-            price: pprice
+            points: ppoints,
+            question: pquestion,
+            answer: panswer,
         });
         const messageResponse = { message: `product ${p_id} updated correctly`};
         res.send(JSON.stringify(messageResponse));
@@ -72,18 +73,6 @@ app.post("/update", async (req, res) => {
         console.log("error while updating a product:" + p_id + " " + err);
     }
     
-    //await Product.findById(p_id, function (err, prod) {
-    //    if (prod === null) {
-    //        console.log("product not found");
-    //    }
-    //    else {
-    //        // Increase student's GPA and save
-    //        prod.price = pprice;
-    //        prod.save(function (err, prod) {
-    //            console.log("Updated Succesfully");
-    //        });
-    //    }
-    //});
 });
 
 app.delete("/delete", async (req, res) => {

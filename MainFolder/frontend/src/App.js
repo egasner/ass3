@@ -1,4 +1,8 @@
 import { useState, useEffect } from "react";
+import './App.css';
+import ethan from './MeIamMe.jpg';
+import savvy from './sav4Final.jpg';
+
 
 function App() {
     const [product, setProduct] = useState([]);
@@ -71,38 +75,41 @@ function App() {
     const [addNewProduct, setAddNewProduct] = useState({
         _id: 0,
         title: "",
-        price: 0.0,
-        description: "",
-        category: "",
+        points: 0.0,
+        question: "",
+        answer: "",
         image: "http://127.0.0.1:4000/images/",
-        rating: { rate: 0.0, count: 0 },
     });
 
     const [updateProduct, setUpdateProduct] = useState({
         _id: 0,
-        price: 0.0,
+        points: 0.0,
     });
 
     const showOneItem = oneProduct.map((el) => (
-        <div key={el._id}>
+        <div key={el._id} className="Card">
             <br></br>
             <img src={el.image} width={500} /> <br />
-            Title: {el.title} <br />
-            Category: {el.category} <br />
-            Price: {el.price} <br />
-            Rate :{el.rating.rate} and Count:{el.rating.count} <br />
+            <div className="Cardtext">
+                question: {el.question} <br />
+                answer: {el.answer} <br />
+                points: {el.points} <br />
+            </div>
+            
             <br></br>
         </div>
     ));
 
     const showAllItems = product.map((el) => (
-        <div key={el._id}>
+        <div key={el._id} className="Card">
             <br></br>
-            <img src={el.image} width={200} /> <br />
-            Title: {el.title} <br />
-            Category: {el.category} <br />
-            Price: {el.price} <br />
-            Rate :{el.rating.rate} and Count:{el.rating.count} <br />
+            <img src={el.image} width={500} /> <br />
+            <div className="Cardtext">
+                question: {el.question} <br />
+                answer: {el.answer} <br />
+                points: {el.points} <br />
+            </div>
+            
             <br></br>
         </div>
     ));
@@ -154,12 +161,12 @@ function App() {
         getOneByOneProductNext();
     }
 
-    function updateOneProduct(updateid, inprice) {
+    function updateOneProduct(updateid, inpoints, inquestion, inanswer) {
         console.log("Product to update :", updateid);
         fetch("http://localhost:4000/update/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ _id: updateid, price: inprice }),
+            body: JSON.stringify({ _id: updateid, points: inpoints, question: inquestion, answer: inanswer }),
         })
             .then((response) => response.json())
             .then((data) => {
@@ -210,24 +217,16 @@ function App() {
             setAddNewProduct({ ...addNewProduct, _id: value });
         } else if (evt.target.name === "title") {
             setAddNewProduct({ ...addNewProduct, title: value });
-        } else if (evt.target.name === "price") {
-            setAddNewProduct({ ...addNewProduct, price: value });
-        } else if (evt.target.name === "description") {
-            setAddNewProduct({ ...addNewProduct, description: value });
-        } else if (evt.target.name === "category") {
-            setAddNewProduct({ ...addNewProduct, category: value });
+        } else if (evt.target.name === "points") {
+            setAddNewProduct({ ...addNewProduct, points: value });
+        } else if (evt.target.name === "question") {
+            setAddNewProduct({ ...addNewProduct, question: value });
+        } else if (evt.target.name === "answer") {
+            setAddNewProduct({ ...addNewProduct, answer: value });
         } else if (evt.target.name === "image") {
             const temp = value;
             setAddNewProduct({ ...addNewProduct, image: temp });
-        } else if (evt.target.name === "rate") {
-            setAddNewProduct({ ...addNewProduct, rating: { rate: value } });
-        } else if (evt.target.name === "count") {
-            const temp = addNewProduct.rating.rate;
-            setAddNewProduct({
-                ...addNewProduct,
-                rating: { rate: temp, count: value },
-            });
-        }
+        } 
     }
 
 
@@ -258,12 +257,12 @@ function App() {
         <div >
             <center>
                 <div style={{border: 'outset lightblue'}}>
-                    <h1>Catalog of Products</h1>
-                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setViewAll()}>Show All products</button>
+                    <h1>Meme Questions Webpage</h1>
+                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setViewAll()}>Show All Questions</button>
                     <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setSeeID()}>Search By ID</button>
-                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setAddView()}>Add Product</button>
-                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setUpdateView()}>Update Product</button>
-                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setDeleteView()}>Delete Product</button>
+                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setAddView()}>Add Question</button>
+                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setUpdateView()}>Update Question</button>
+                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setDeleteView()}>Delete Question</button>
                     <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => setInfoView()}>Student Info</button>
                     <br></br>
                 </div>
@@ -271,30 +270,28 @@ function App() {
                     
 
                 {allProducts &&<div style={{border: 'outset lightblue'}}>
-                    <h1>All Available Products.</h1>
-                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => getAllProducts()}>Show All products</button>
-                    {viewer1 && <div>Products {showAllItems}</div>}
+                    <h1>All Questions.</h1>
+                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => getAllProducts()}>Show All Questions</button>
+                    {viewer1 && <div>Questions {showAllItems}</div>}
                 </div>}
 
                 {seeByID && <div style={{border: 'outset lightblue'}}>   
-                    <h1>Show one Product by Id:</h1>
+                    <h1>Show one Question by Number id:</h1>
                     <input style={{border: 'outset lightblue'}} type="text" id="message" name="message" placeholder="id" onChange={(e) => getOneProduct(e.target.value)} />
-                    {viewer2 && <div>Product: {showOneItem}</div>}
+                    {viewer2 && <div>QUestion: {showOneItem}</div>}
                 </div>}
 
                 
 
                 {AddProd && <div style={{border: 'outset lightblue'}}>
-                    <h3>Add a new product :</h3>
+                    <h3>Add a new Question :</h3>
                     <form action="">
                         <input style={{border: 'outset lightblue'}} type="number" placeholder="id?" name="_id" value={addNewProduct._id} onChange={handleChange} />
                         <input style={{border: 'outset lightblue'}}type="text" placeholder="title?" name="title" value={addNewProduct.title} onChange={handleChange} />
-                        <input style={{border: 'outset lightblue'}}type="number" placeholder="price?" name="price" value={addNewProduct.price} onChange={handleChange} />
-                        <input style={{border: 'outset lightblue'}}type="text" placeholder="description?" name="description" value={addNewProduct.description} onChange={handleChange} />
-                        <input style={{border: 'outset lightblue'}}type="text" placeholder="category?" name="category" value={addNewProduct.category} onChange={handleChange} />
+                        <input style={{border: 'outset lightblue'}}type="number" placeholder="points?" name="points" value={addNewProduct.points} onChange={handleChange} />
+                        <input style={{border: 'outset lightblue'}}type="text" placeholder="question?" name="question" value={addNewProduct.question} onChange={handleChange} />
+                        <input style={{border: 'outset lightblue'}}type="text" placeholder="answer?" name="answer" value={addNewProduct.answer} onChange={handleChange} />
                         <input style={{border: 'outset lightblue'}}type="text" placeholder="image?" name="image" value={addNewProduct.image} onChange={handleChange} />
-                        <input style={{border: 'outset lightblue'}}type="number" placeholder="rate?" name="rate" value={addNewProduct.rating.rate} onChange={handleChange} />
-                        <input style={{border: 'outset lightblue'}}type="number" placeholder="count?" name="count" value={addNewProduct.rating.count} onChange={handleChange} />
                         <button type="submit" style={{border: 'outset lightblue', backgroundColor: '#FF923D'}}  onClick={handleOnSubmit}>
                             submit
                         </button>
@@ -302,19 +299,23 @@ function App() {
                 </div>}
 
                 {updateProd && <div style={{border: 'outset lightblue'}}>
-                    <h3>update one product:</h3>
+                    <h3>update one question:</h3>
                     <input type="checkbox" id="acceptdelete" name="acceptdelete" checked={checked6}
                         onChange={(e) => setChecked6(!checked6)} />
 
                     <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => getOneByOneProductPrev()}>Prev</button>
                     <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => getOneByOneProductNext()}>Next</button>
-                    <input style={{border: 'outset lightblue'}} type="number" placeholder="price?" name="price" value={addNewProduct.price} onChange={handleChange} />
-                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => updateOneProduct(index+1, addNewProduct.price)}>Update</button>
+                    <input style={{border: 'outset lightblue'}} type="string" placeholder="question?" name="question" value={addNewProduct.question} onChange={handleChange} />
+                    <input style={{border: 'outset lightblue'}} type="string" placeholder="answer?" name="answer" value={addNewProduct.answer} onChange={handleChange} />
+                    <input style={{border: 'outset lightblue'}} type="number" placeholder="points?" name="points" value={addNewProduct.points} onChange={handleChange} />
+                    <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => updateOneProduct(index+1, addNewProduct.points, addNewProduct.question, addNewProduct.answer)}>Update</button>
                     {checked6 && (
-                        <div key={product[index]._id}>
+                        <div key={product[index]._id} className="Card">
                             <img src={product[index].image} width={200} /> <br />
                             Id:{product[index]._id} <br />
-                            Price: {product[index].price} <br />
+                            Question: {product[index].question} <br />
+                            Answer: {product[index].answer} <br />
+                            Points: {product[index].points} <br />
                         </div>
                     )}
                 </div>}
@@ -327,14 +328,14 @@ function App() {
                     <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => getOneByOneProductNext()}>Next</button>
                     <button style={{border: 'outset lightblue', backgroundColor: '#FF923D'}} onClick={() => deleteOneProduct(product[index]._id)}>Delete</button>
                     {checked4 && (
-                        <div key={product[index]._id}>
+                        <div key={product[index]._id} className="Card">
                             <img src={product[index].image} width={200} /> <br />
                             Id:{product[index]._id} <br />
                             Title: {product[index].title} <br />
-                            Category: {product[index].category} <br />
-                            Price: {product[index].price} <br />
-                            Rate :{product[index].rating.rate} and Count:
-                            {product[index].rating.count} <br />
+                            question: {product[index].question} <br />
+                            answer: {product[index].answer} <br />
+                            Points: {product[index].points} <br />
+                            
                         </div>
                     )}
                 </div>}
@@ -344,11 +345,13 @@ function App() {
                     <div>
                         Names: Savannah Franklin, Ethan Gasner <br />
                         Emails: sf03@iastate.edu, egasner@iastate.edu <br />
-                        Course Name: Com S 319 <br />
-                        Professor: Abraham Netzahualcoy Aldaco Gastelum <br />
-                        Date: 04/29/2023 <br />
+                        Course Name: Com S 319 Spring <br />
+                        Professor: Abraham Netzahualcoy Aldaco Gastelum  aaldaco@iastate.edu<br />
+                        Date: 05/06/2023 <br />
                         Info: Welcome to Team 30's Shop aka Team Long Nose's Shop! This website is a project of ours where we practice using Mongo, REACT, and many other skills for our Com S 319 class! For a bit of fun, our products are fun little memes to follow our theme of using them throughout the semester.
                     </div>
+                    <img src={ethan} width="25%"/> <br />
+                    <img src={savvy} width="25%"/>
                 </div>}
             </center>
         </div>
